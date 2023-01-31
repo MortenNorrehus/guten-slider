@@ -1,0 +1,64 @@
+/**
+ * The following styles get applied inside the editor only.
+ *
+ * Replace them with your own styles or remove the file completely.
+ */
+
+.wp-block-gutenberg-slider-gutenberg-slider {
+	border: 1px dotted #f00;
+}
+
+.wp-block-gavflab-gutenberg-slider {
+	max-width: 100% !important;
+	overflow: hidden;
+}
+
+.gutenslider-thumbnails {
+	max-height: 200px;
+	height: 100%;
+}
+
+.gutenslider-thumbnails-inner__container {
+	height: 200px;
+}
+
+.gutenslider-thumbnails-inner__container > div .wp-block-cover {
+	min-height: 200px;
+	height: 100%;
+}
+
+.wp-block-gavflab-gutenberg-slider {
+	min-height: 600px;
+
+}
+
+.wp-block-gavflab-gutenberg-slider .swiper-wrapper {
+	overflow: auto;
+	display: flex;
+	height: 100%;
+	scroll-snap-type: x mandatory;
+}
+
+.wp-block-gavflab-gutenberg-slider .swiper-wrapper > div:not(.block-list-appender) {
+	min-width: 100%;
+	scroll-snap-align: start;
+	height: 100%;
+}
+
+
+
+.height_unit_control {
+	display: flex;
+}
+
+.gutenslider-thumbnails-inner__container .edit_slide {
+	position: absolute;
+	bottom: 10px;
+	left: 10px;
+	z-index: 999999;
+}
+
+.edit_main-slider {
+	width: 100%;
+	justify-content: center;
+}

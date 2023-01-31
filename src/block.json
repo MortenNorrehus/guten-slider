@@ -1,0 +1,33 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 2,
+	"name": "gavflab/gutenberg-slider",
+	"version": "0.1.0",
+	"title": "Slider",
+	"category": "widgets",
+	"icon": "slides",
+	"description": "Gutenberg Slider",
+	"supports": {
+		"html": false,
+		"align": ["full","wide"]
+	},
+	"textdomain": "gutenberg-slider",
+	"editorScript": "file:./index.js",
+	"editorStyle": "file:./index.css",
+	"style": "file:./style-index.css",
+	"render": "file:./render.php",
+	"attributes": {
+		"slides": {
+			"type": "array",
+			"default": []
+		},
+		"size": {
+			"type": "string",
+			"default": "vh"
+		},
+		"height": {
+			"type": "string",
+			"default": "50"
+		}
+	}
+}
