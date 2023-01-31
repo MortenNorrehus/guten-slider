@@ -11,7 +11,11 @@ const style = {
 }
 
 const handleEdit = (clientId) => {
-    wp.data.dispatch('core/block-editor').selectBlock(clientId)
+
+    document.getElementById('block-' + clientId).scrollIntoView();
+
+    //wp.data.dispatch('core/block-editor').selectBlock(clientId)
+
 }
 
 

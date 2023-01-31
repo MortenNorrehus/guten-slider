@@ -34,8 +34,11 @@ const style = {
   position: 'relative'
 };
 const handleEdit = clientId => {
-  wp.data.dispatch('core/block-editor').selectBlock(clientId);
+  document.getElementById('block-' + clientId).scrollIntoView();
+
+  //wp.data.dispatch('core/block-editor').selectBlock(clientId)
 };
+
 const Card = _ref => {
   let {
     id,
@@ -210,22 +213,22 @@ const withAdvancedControls = createHigherOrderComponent(BlockEdit => {
     const {
       clientId
     } = props;
-    if (props.name !== 'core/cover') {
-      return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)(BlockEdit, props);
-    }
     const {
       attributes,
       setAttributes,
       isSelected
     } = props;
-    const {
-      aspectRatio
-    } = attributes;
+    const handleSliderEdit = clientId => {
+      const parentBlocks = wp.data.select('core/block-editor').getBlockParents(props.clientId);
+      const parentAttributes = wp.data.select('core/block-editor').getBlocksByClientId(parentBlocks);
+      parentAttributes.forEach(parent => {
+        if (parent.name == 'gavflab/gutenberg-slider') {
+          wp.data.dispatch('core/block-editor').selectBlock(parent.clientId);
+        }
+      });
+    };
     const parentBlocks = wp.data.select('core/block-editor').getBlockParents(props.clientId);
     const parentAttributes = wp.data.select('core/block-editor').getBlocksByClientId(parentBlocks);
-    const handleSliderEdit = clientId => {
-      document.querySelector('[aria-label="Vælg Slider"]').click();
-    };
     if (parentAttributes.length > 0 && parentAttributes[0].name === 'gavflab/gutenberg-slider') {
       return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)(Fragment, null, isSelected && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_4__.InspectorControls, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__.PanelBody, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__.Button, {
         className: "is-primary edit_main-slider",
@@ -256,6 +259,9 @@ function Edit(props) {
     const innerCount = (0,_wordpress_data__WEBPACK_IMPORTED_MODULE_7__.select)("core/block-editor").getBlocksByClientId(clientId)[0].innerBlocks.length;
     let block = (0,_wordpress_blocks__WEBPACK_IMPORTED_MODULE_6__.createBlock)("core/cover");
     (0,_wordpress_data__WEBPACK_IMPORTED_MODULE_7__.dispatch)("core/block-editor").insertBlock(block, innerCount, clientId);
+    setTimeout(() => {
+      document.getElementById('block-' + block.clientId).scrollIntoView();
+    }, 500);
   }
   const SliderContainer = () => {
     {
@@ -298,24 +304,27 @@ function Edit(props) {
     moveBlock();
   }, [cards]);
   (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
-    setCards([]);
-    if (sliderBlocks.length > 0) {
-      sliderBlocks.map((slide, index) => {
-        const sliderInnerBlocks = slide.innerBlocks;
-        let innerContent = '';
-        sliderInnerBlocks.map(inner => {
-          innerContent += inner.originalContent;
+    const loadCards = () => {
+      setCards([]);
+      if (sliderBlocks.length > 0) {
+        sliderBlocks.map((slide, index) => {
+          const sliderInnerBlocks = slide.innerBlocks;
+          let innerContent = '';
+          sliderInnerBlocks.map(inner => {
+            innerContent += inner.originalContent;
+          });
+          const slideContent = slide.originalContent.slice(0, -12) + innerContent + slide.originalContent.slice(-12);
+          setCards(cards => [...cards, {
+            id: index,
+            text: slideContent,
+            clientId: slide.clientId,
+            identifier: slide.innerBlocks[0].originalContent
+          }]);
         });
-        const slideContent = slide.originalContent.slice(0, -12) + innerContent + slide.originalContent.slice(-12);
-        setCards(cards => [...cards, {
-          id: index,
-          text: slideContent,
-          clientId: slide.clientId,
-          identifier: slide.innerBlocks[0].originalContent
-        }]);
-      });
-    }
-    ;
+      }
+      ;
+    };
+    loadCards();
   }, []);
   props.setAttributes({
     slides: cards
@@ -325,7 +334,7 @@ function Edit(props) {
   };
   const blockProps = (0,_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_4__.useBlockProps)({
     style: {
-      height: props.attributes.height + props.attributes.size
+      height: props.attributes.height
     }
   });
   const innerBlocksProps = (0,_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_4__.useInnerBlocksProps)({
@@ -342,33 +351,20 @@ function Edit(props) {
     onClick: insertButtonBlock
   }, "Add New Slide")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__.PanelBody, {
     className: "height_unit_control"
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__.__experimentalNumberControl, {
-    label: "Slider Height",
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__.__experimentalUnitControl, {
+    label: "Min. Slider Height",
     min: "0",
-    value: height,
     onChange: newHeight => {
       props.setAttributes({
         height: newHeight
       }), setHeight(newHeight);
-    }
-  }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__.SelectControl, {
-    label: "Unit",
-    value: size,
-    options: [{
-      label: 'px',
-      value: 'px'
-    }, {
-      label: '%',
-      value: '%'
-    }, {
-      label: 'vh',
-      value: 'vh'
-    }],
-    onChange: newSize => {
+    },
+    onUnitChange: newSize => {
       props.setAttributes({
         size: newSize
       }), setSize(newSize);
-    }
+    },
+    value: [props.attributes.height]
   }))));
 }
 

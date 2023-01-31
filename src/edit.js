@@ -15,9 +15,9 @@ import { HTML5Backend } from 'react-dnd-html5-backend'
 import { useState, useCallback, useEffect } from '@wordpress/element';
 
 import { useBlockProps, InspectorControls, useInnerBlocksProps } from '@wordpress/block-editor';
-import { PanelBody, Button, __experimentalNumberControl as NumberControl, SelectControl } from '@wordpress/components';
+import { PanelBody, Button, __experimentalNumberControl as NumberControl, SelectControl, __experimentalUnitControl as UnitControl } from '@wordpress/components';
 import { createBlock } from "@wordpress/blocks";
-import { useDispatch, dispatch, select, useSelect } from "@wordpress/data";
+import { useDispatch, dispatch, select, useSelect, subscribe } from "@wordpress/data";
 
 
 
@@ -29,17 +29,12 @@ import { Card } from './components/Card.js';
 
 
 
-
 const withAdvancedControls = createHigherOrderComponent((BlockEdit) => {
 	return (props) => {
 
 		const { clientId } = props;
 
-		if (props.name !== 'core/cover') {
-			return (
-				<BlockEdit {...props} />
-			)
-		}
+
 
 		const {
 			attributes,
@@ -47,18 +42,21 @@ const withAdvancedControls = createHigherOrderComponent((BlockEdit) => {
 			isSelected,
 		} = props;
 
-		const {
-			aspectRatio,
-		} = attributes;
-
-		const parentBlocks = wp.data.select('core/block-editor').getBlockParents(props.clientId);
-		const parentAttributes = wp.data.select('core/block-editor').getBlocksByClientId(parentBlocks);
 
 		const handleSliderEdit = (clientId) => {
-			document.querySelector('[aria-label="Vælg Slider"]').click();
+			const parentBlocks = wp.data.select('core/block-editor').getBlockParents(props.clientId);
+			const parentAttributes = wp.data.select('core/block-editor').getBlocksByClientId(parentBlocks);
+
+			parentAttributes.forEach(parent => {
+				if (parent.name == 'gavflab/gutenberg-slider') {
+					wp.data.dispatch('core/block-editor').selectBlock(parent.clientId)
+				}
+			})
 		}
 
 
+		const parentBlocks = wp.data.select('core/block-editor').getBlockParents(props.clientId);
+		const parentAttributes = wp.data.select('core/block-editor').getBlocksByClientId(parentBlocks);
 
 
 		if (parentAttributes.length > 0 && parentAttributes[0].name === 'gavflab/gutenberg-slider') {
@@ -103,7 +101,6 @@ export default function Edit(props) {
 
 
 
-
 	const [cards, setCards] = useState([]);
 	const [size, setSize] = useState(props.attributes.size);
 	const [height, setHeight] = useState(props.attributes.height);
@@ -121,6 +118,11 @@ export default function Edit(props) {
 			.innerBlocks.length;
 		let block = createBlock("core/cover");
 		dispatch("core/block-editor").insertBlock(block, innerCount, clientId);
+
+		setTimeout(() => {
+			document.getElementById('block-' + block.clientId).scrollIntoView()
+		}, 500);
+
 	}
 
 	const SliderContainer = () => {
@@ -183,23 +185,26 @@ export default function Edit(props) {
 
 
 	useEffect(() => {
-		setCards([]);
 
-		if (sliderBlocks.length > 0) {
-			sliderBlocks.map((slide, index) => {
+		const loadCards = () => {
+			setCards([]);
 
-				const sliderInnerBlocks = slide.innerBlocks;
-				let innerContent = '';
-				sliderInnerBlocks.map(inner => {
-					innerContent += inner.originalContent;
+			if (sliderBlocks.length > 0) {
+				sliderBlocks.map((slide, index) => {
+
+					const sliderInnerBlocks = slide.innerBlocks;
+					let innerContent = '';
+					sliderInnerBlocks.map(inner => {
+						innerContent += inner.originalContent;
+					})
+					const slideContent = slide.originalContent.slice(0, -12) + innerContent + slide.originalContent.slice(-12);
+
+					setCards(cards => [...cards, { id: index, text: slideContent, clientId: slide.clientId, identifier: slide.innerBlocks[0].originalContent }]);
 				})
-				const slideContent = slide.originalContent.slice(0, -12) + innerContent + slide.originalContent.slice(-12);
+			};
 
-				setCards(cards => [...cards, { id: index, text: slideContent, clientId: slide.clientId, identifier: slide.innerBlocks[0].originalContent }]);
-			})
-		};
-
-
+		}
+		loadCards();
 	}, [])
 
 	props.setAttributes({ slides: cards })
@@ -214,7 +219,7 @@ export default function Edit(props) {
 
 	const blockProps = useBlockProps({
 		style: {
-			height: props.attributes.height + props.attributes.size
+			height: props.attributes.height
 		}
 	});
 	const innerBlocksProps = useInnerBlocksProps(
@@ -225,6 +230,7 @@ export default function Edit(props) {
 			allowedBlocks: ['core/cover']
 		}
 	);
+
 
 
 	return (
@@ -246,22 +252,13 @@ export default function Edit(props) {
 				</PanelBody>
 				<PanelBody
 					className="height_unit_control">
-					<NumberControl
-						label="Slider Height"
-						min="0"
-						value={height}
-						onChange={(newHeight) => { props.setAttributes({ height: newHeight }), setHeight(newHeight) }}
 
-					/>
-					<SelectControl
-						label="Unit"
-						value={size}
-						options={[
-							{ label: 'px', value: 'px' },
-							{ label: '%', value: '%' },
-							{ label: 'vh', value: 'vh' },
-						]}
-						onChange={(newSize) => { props.setAttributes({ size: newSize }), setSize(newSize) }}
+					<UnitControl
+						label='Min. Slider Height'
+						min='0'
+						onChange={(newHeight) => { props.setAttributes({ height: newHeight }), setHeight(newHeight) }}
+						onUnitChange={(newSize) => { props.setAttributes({ size: newSize }), setSize(newSize) }}
+						value={[props.attributes.height]}
 					/>
 				</PanelBody>
 			</InspectorControls>
