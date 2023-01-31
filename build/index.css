@@ -63,4 +63,29 @@
   justify-content: center;
 }
 
+.gutenslider-thumbnails-inner__container .editor-styles-wrapper {
+  background: transparent;
+  color: inherit;
+}
+
+.gutenslider-thumbnails-inner__container .editor-styles-wrapper h1,
+.gutenslider-thumbnails-inner__container .editor-styles-wrapper h2,
+.gutenslider-thumbnails-inner__container .editor-styles-wrapper h3,
+.gutenslider-thumbnails-inner__container .editor-styles-wrapper h4,
+.gutenslider-thumbnails-inner__container .editor-styles-wrapper h5,
+.gutenslider-thumbnails-inner__container .editor-styles-wrapper h6,
+.gutenslider-thumbnails-inner__container .editor-styles-wrapper p {
+  font-size: 1rem !important;
+}
+
+.gutenslider-thumbnails-inner__container .editor-styles-wrapper .wp-block-buttons {
+  display: flex;
+  gap: 1rem;
+}
+
+.gutenslider-thumbnails-inner__container .editor-styles-wrapper .wp-element-button {
+  padding: 5px;
+  font-size: 0.5rem;
+}
+
 /*# sourceMappingURL=index.css.map*/

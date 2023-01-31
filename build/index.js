@@ -309,10 +309,20 @@ function Edit(props) {
       if (sliderBlocks.length > 0) {
         sliderBlocks.map((slide, index) => {
           const sliderInnerBlocks = slide.innerBlocks;
-          let innerContent = '';
+          let innerContent = '<div class="editor-styles-wrapper">';
           sliderInnerBlocks.map(inner => {
-            innerContent += inner.originalContent;
+            if (inner.name == 'core/buttons') {
+              const align = inner.attributes.layout != undefined ? 'is-content-justification-' + inner.attributes.layout.justifyContent : '';
+              innerContent += '<div class="wp-block-buttons' + ' ' + align + '">';
+              inner.innerBlocks.forEach(inner => {
+                innerContent += inner.originalContent;
+              });
+              innerContent += '</div>';
+            } else {
+              innerContent += inner.originalContent;
+            }
           });
+          innerContent += '</div>';
           const slideContent = slide.originalContent.slice(0, -12) + innerContent + slide.originalContent.slice(-12);
           setCards(cards => [...cards, {
             id: index,
@@ -329,6 +339,7 @@ function Edit(props) {
   props.setAttributes({
     slides: cards
   });
+  console.log(sliderBlocks);
   const styling = {
     height: '200px'
   };
