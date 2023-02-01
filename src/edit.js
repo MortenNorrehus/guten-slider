@@ -28,13 +28,10 @@ import { Card } from './components/Card.js';
 
 
 
-
-const withAdvancedControls = createHigherOrderComponent((BlockEdit) => {
+const insertEditButton = createHigherOrderComponent((BlockEdit) => {
 	return (props) => {
 
 		const { clientId } = props;
-
-
 
 		const {
 			attributes,
@@ -65,6 +62,7 @@ const withAdvancedControls = createHigherOrderComponent((BlockEdit) => {
 					{isSelected &&
 						<InspectorControls>
 							<PanelBody>
+								<p>Click "Edit Slider" to edit the slider</p>
 								<Button
 									className="is-primary edit_main-slider"
 									onClick={(e) => { handleSliderEdit(props.clientId) }}>
@@ -84,22 +82,16 @@ const withAdvancedControls = createHigherOrderComponent((BlockEdit) => {
 		}
 	};
 
-}, 'withAdvancedControls');
+}, 'insertEditButton');
 
 addFilter(
 	'editor.BlockEdit',
-	'editorskit/custom-advanced-control',
-	withAdvancedControls
+	'gavflab/insert-edit-button',
+	insertEditButton
 );
 
 
-
-
-
-
 export default function Edit(props) {
-
-
 
 	const [cards, setCards] = useState([]);
 	const [size, setSize] = useState(props.attributes.size);
@@ -110,8 +102,6 @@ export default function Edit(props) {
 	const { blockCount } = useSelect(select => ({
 		blockCount: select('core/block-editor').getBlockCount(props.clientId)
 	}))
-
-	const ALLOWED_BLOCKS = ["core/cover"];
 
 	function insertButtonBlock() {
 		const innerCount = select("core/block-editor").getBlocksByClientId(clientId)[0]
@@ -147,9 +137,7 @@ export default function Edit(props) {
 							text={card.text}
 							moveCard={moveCard}
 							clientId={card.clientId}
-
 						/>
-
 					</>
 				)
 			}, [])
@@ -190,11 +178,14 @@ export default function Edit(props) {
 			setCards([]);
 
 			if (sliderBlocks.length > 0) {
+
 				sliderBlocks.map((slide, index) => {
 
 					const sliderInnerBlocks = slide.innerBlocks;
-					let innerContent = '<div class="editor-styles-wrapper">';
+					let innerContent = '';
+
 					sliderInnerBlocks.map(inner => {
+						innerContent += '<div class="editor-styles-wrapper">';
 						if (inner.name == 'core/buttons') {
 							const align = inner.attributes.layout != undefined ? 'is-content-justification-' + inner.attributes.layout.justifyContent : '';
 							innerContent += '<div class="wp-block-buttons' + ' ' + align + '">';
@@ -206,15 +197,14 @@ export default function Edit(props) {
 
 							innerContent += inner.originalContent;
 						}
-
+						innerContent += '</div>';
 
 					})
-					innerContent += '</div>';
 
 					const slideContent = slide.originalContent.slice(0, -12) + innerContent + slide.originalContent.slice(-12);
-
 					setCards(cards => [...cards, { id: index, text: slideContent, clientId: slide.clientId, identifier: slide.innerBlocks[0].originalContent }]);
 				})
+
 			};
 
 		}
@@ -224,12 +214,6 @@ export default function Edit(props) {
 	props.setAttributes({ slides: cards })
 
 	console.log(sliderBlocks);
-
-
-
-	const styling = {
-		height: '200px'
-	}
 
 	const blockProps = useBlockProps({
 		style: {
@@ -245,8 +229,6 @@ export default function Edit(props) {
 		}
 	);
 
-
-
 	return (
 		<>
 			<section className="gutenberg-slider" {...blockProps}>
@@ -257,11 +239,16 @@ export default function Edit(props) {
 			<InspectorControls>
 				<PanelBody>
 					<DndProvider backend={HTML5Backend}>
-						<SliderContainer {...props} />
+						<p>Drag and drop slides to change order.</p>
+						<p>Click 'Edit' to edit the slide</p>
+						<SliderContainer {...props}
+
+						/>
 					</DndProvider>
 					<Button
 						className="gutenberg-slider-add__slide is-primary"
-						onClick={insertButtonBlock}>Add New Slide</Button>
+						onClick={insertButtonBlock}
+						help={'fghj'}>Add New Slide</Button>
 
 				</PanelBody>
 				<PanelBody
@@ -273,6 +260,7 @@ export default function Edit(props) {
 						onChange={(newHeight) => { props.setAttributes({ height: newHeight }), setHeight(newHeight) }}
 						onUnitChange={(newSize) => { props.setAttributes({ size: newSize }), setSize(newSize) }}
 						value={[props.attributes.height]}
+						help='sdgdsgds'
 					/>
 				</PanelBody>
 			</InspectorControls>

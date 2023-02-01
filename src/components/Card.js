@@ -82,7 +82,7 @@ export const Card = ({ id, text, index, moveCard, clientId }) => {
     return (
         <div className="gutenslider-thumbnails" ref={ref} style={{ ...style, opacity }} data-handler-id={handlerId}>
             <div className="gutenslider-thumbnails-inner__container">
-                <div dangerouslySetInnerHTML={{ __html: text }} />
+                <div className="editor-styles-wrapper" dangerouslySetInnerHTML={{ __html: text }} />
                 <Button
                     className="edit_slide is-primary"
                     onClick={(e) => { handleEdit(clientId) }}>Edit</Button>
