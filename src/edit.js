@@ -51,10 +51,8 @@ const insertEditButton = createHigherOrderComponent((BlockEdit) => {
 			})
 		}
 
-
 		const parentBlocks = wp.data.select('core/block-editor').getBlockParents(props.clientId);
 		const parentAttributes = wp.data.select('core/block-editor').getBlocksByClientId(parentBlocks);
-
 
 		if (parentAttributes.length > 0 && parentAttributes[0].name === 'gavflab/gutenberg-slider') {
 			return (
