@@ -211,7 +211,7 @@ export default function Edit(props) {
 
 	props.setAttributes({ slides: cards })
 
-	console.log(sliderBlocks);
+
 
 	const blockProps = useBlockProps({
 		style: {
@@ -226,12 +226,22 @@ export default function Edit(props) {
 			allowedBlocks: ['core/cover']
 		}
 	);
-
+	console.log(props);
 	return (
 		<>
 			<section className="gutenberg-slider" {...blockProps}>
 
+				{blockCount == 0 &&
+					<div className="slider_empty">
+						<span>Slider is empty</span>
+						<Button
+							className="gutenberg-slider-add__slide is-primary"
+							onClick={insertButtonBlock}
+							help={'fghj'}>Add New Slide</Button>
+					</div>}
 				<div {...innerBlocksProps} />
+
+
 
 			</section>
 			<InspectorControls>

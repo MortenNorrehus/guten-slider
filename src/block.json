@@ -27,7 +27,7 @@
 		},
 		"height": {
 			"type": "string",
-			"default": "50"
+			"default": "50vh"
 		}
 	}
 }

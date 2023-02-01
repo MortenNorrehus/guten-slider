@@ -1,1 +1,102 @@
-.wp-block-gutenberg-slider-gutenberg-slider{border:1px dotted red}.wp-block-gavflab-gutenberg-slider{max-width:100%!important;overflow:hidden}.gutenslider-thumbnails{height:100%;max-height:200px}.gutenslider-thumbnails-inner__container{height:200px}.gutenslider-thumbnails-inner__container>div .wp-block-cover{height:100%;min-height:200px}.wp-block-gavflab-gutenberg-slider{min-height:600px}.wp-block-gavflab-gutenberg-slider .swiper-wrapper{display:flex;height:100%;overflow:auto;scroll-behavior:smooth;scroll-snap-type:x mandatory}.wp-block-gavflab-gutenberg-slider .swiper-wrapper>div:not(.block-list-appender){height:100%;min-width:100%;scroll-snap-align:start}.height_unit_control{display:flex}.gutenslider-thumbnails-inner__container .edit_slide{bottom:10px;left:10px;position:absolute;z-index:999999}.edit_main-slider{justify-content:center;width:100%}.gutenslider-thumbnails-inner__container .editor-styles-wrapper{background:transparent;color:inherit}.gutenslider-thumbnails-inner__container .editor-styles-wrapper h1,.gutenslider-thumbnails-inner__container .editor-styles-wrapper h2,.gutenslider-thumbnails-inner__container .editor-styles-wrapper h3,.gutenslider-thumbnails-inner__container .editor-styles-wrapper h4,.gutenslider-thumbnails-inner__container .editor-styles-wrapper h5,.gutenslider-thumbnails-inner__container .editor-styles-wrapper h6,.gutenslider-thumbnails-inner__container .editor-styles-wrapper p{font-size:1rem!important}.gutenslider-thumbnails-inner__container .editor-styles-wrapper .wp-block-buttons{display:flex;gap:1rem}.gutenslider-thumbnails-inner__container .editor-styles-wrapper .wp-element-button{font-size:.5rem;padding:5px}
+/*!****************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[3].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[3].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[3].use[3]!./src/editor.scss ***!
+  \****************************************************************************************************************************************************************************************************************************************/
+/**
+ * The following styles get applied inside the editor only.
+ *
+ * Replace them with your own styles or remove the file completely.
+ */
+.wp-block-gutenberg-slider-gutenberg-slider {
+  border: 1px dotted #f00;
+}
+
+.wp-block-gavflab-gutenberg-slider {
+  max-width: 100% !important;
+  overflow: hidden;
+}
+
+.gutenslider-thumbnails {
+  max-height: 200px;
+  height: 100%;
+}
+
+.gutenslider-thumbnails-inner__container {
+  height: 200px;
+}
+
+.gutenslider-thumbnails-inner__container > div .wp-block-cover {
+  min-height: 200px;
+  height: 100%;
+}
+
+.wp-block-gavflab-gutenberg-slider .swiper-wrapper {
+  overflow: auto;
+  display: flex;
+  height: 100%;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+}
+
+.wp-block-gavflab-gutenberg-slider .swiper-wrapper > div:not(.block-list-appender) {
+  min-width: 100%;
+  scroll-snap-align: start;
+  height: 100%;
+}
+
+.height_unit_control {
+  display: flex;
+}
+
+.gutenslider-thumbnails-inner__container .edit_slide {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  z-index: 999999;
+}
+
+.edit_main-slider {
+  width: 100%;
+  justify-content: center;
+}
+
+.gutenslider-thumbnails-inner__container .editor-styles-wrapper {
+  background: transparent;
+  color: inherit;
+}
+
+.gutenslider-thumbnails-inner__container .editor-styles-wrapper h1,
+.gutenslider-thumbnails-inner__container .editor-styles-wrapper h2,
+.gutenslider-thumbnails-inner__container .editor-styles-wrapper h3,
+.gutenslider-thumbnails-inner__container .editor-styles-wrapper h4,
+.gutenslider-thumbnails-inner__container .editor-styles-wrapper h5,
+.gutenslider-thumbnails-inner__container .editor-styles-wrapper h6,
+.gutenslider-thumbnails-inner__container .editor-styles-wrapper p {
+  font-size: 1rem !important;
+}
+
+.gutenslider-thumbnails-inner__container .editor-styles-wrapper .wp-block-buttons {
+  display: flex;
+  gap: 1rem;
+}
+
+.gutenslider-thumbnails-inner__container .editor-styles-wrapper .wp-element-button {
+  padding: 5px;
+  font-size: 0.5rem;
+}
+
+.slider_empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  flex-direction: column;
+  background-image: url(images/bg.f95c1008.png);
+  border-top: 1px solid black;
+  border-bottom: 1px solid black;
+}
+
+.slider_empty span {
+  margin-bottom: 15px;
+}
+
+/*# sourceMappingURL=index.css.map*/

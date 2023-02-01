@@ -28,7 +28,7 @@
 }
 
 .wp-block-gavflab-gutenberg-slider {
-	min-height: 600px;
+	
 
 }
 
@@ -87,4 +87,19 @@
 .gutenslider-thumbnails-inner__container .editor-styles-wrapper .wp-element-button {
 	padding: 5px;
 font-size: 0.5rem;
+}
+
+.slider_empty {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 100%;
+	flex-direction: column;
+	background-image: url('bg.png');
+	border-top: 1px solid black;
+	border-bottom: 1px solid black;
+}
+
+.slider_empty span {
+	margin-bottom: 15px;
 }
