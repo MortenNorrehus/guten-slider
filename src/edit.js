@@ -6,14 +6,11 @@ const { createHigherOrderComponent } = wp.compose;
 
 
 import { __ } from '@wordpress/i18n';
-import { useDrag } from 'react-dnd'
-import update from 'immutability-helper'
 
+import update from 'immutability-helper'
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
-
 import { useState, useCallback, useEffect, useRef } from '@wordpress/element';
-
 import { useBlockProps, InspectorControls, useInnerBlocksProps } from '@wordpress/block-editor';
 import {
 	PanelBody,
@@ -25,17 +22,8 @@ import {
 } from '@wordpress/components';
 import { createBlock } from "@wordpress/blocks";
 import { useDispatch, dispatch, select, useSelect, subscribe } from "@wordpress/data";
-
-
-
 import './editor.scss';
-
 import { Card } from './components/Card.js';
-//import { SliderContainer } from './components/SliderContainer.js'
-
-
-
-
 
 const insertEditButton = createHigherOrderComponent((BlockEdit) => {
 	return (props) => {
@@ -47,7 +35,6 @@ const insertEditButton = createHigherOrderComponent((BlockEdit) => {
 			setAttributes,
 			isSelected,
 		} = props;
-
 
 		const handleSliderEdit = (clientId) => {
 			const parentBlocks = wp.data.select('core/block-editor').getBlockParents(props.clientId);
@@ -62,7 +49,6 @@ const insertEditButton = createHigherOrderComponent((BlockEdit) => {
 
 		const parentBlocks = wp.data.select('core/block-editor').getBlockParents(props.clientId);
 		const parentAttributes = wp.data.select('core/block-editor').getBlocksByClientId(parentBlocks);
-
 
 		if (parentAttributes.length > 0 && parentAttributes[0].name === 'gavflab/gutenberg-slider' && props.name === 'pixelhero/slide-block') {
 			return (
@@ -80,7 +66,6 @@ const insertEditButton = createHigherOrderComponent((BlockEdit) => {
 						</InspectorControls>
 					}
 					<BlockEdit {...props} />
-
 				</Fragment>
 			);
 		}
@@ -99,12 +84,9 @@ addFilter(
 	insertEditButton
 );
 
-
-
 export default function Edit(props) {
 
 	const slider = useRef(null);
-
 
 	const navigateSlider = (direction) => {
 		if (direction == 'next') {
@@ -118,7 +100,6 @@ export default function Edit(props) {
 			const sliderWidth = slider.current.offsetWidth;
 			slider.current.scroll(scrolledLeft - sliderWidth, 0)
 		}
-
 	}
 
 	const [cards, setCards] = useState([]);
@@ -130,7 +111,6 @@ export default function Edit(props) {
 	const [speed, setSpeed] = useState(props.attributes.speed)
 	const [_size, setSize] = useState(props.attributes.size);
 	const [_height, setHeight] = useState(props.attributes.height);
-
 	const { clientId } = props;
 
 	const { blockCount } = useSelect(select => ({
@@ -146,7 +126,6 @@ export default function Edit(props) {
 		setTimeout(() => {
 			document.getElementById('block-' + block.clientId).scrollIntoView()
 		}, 500);
-
 	}
 
 	const SliderContainer = () => {
@@ -175,12 +154,7 @@ export default function Edit(props) {
 					</>
 				)
 			}, [])
-			return (
-				<>
-					<div>{cards.map((card, i) => renderCard(card, i))}</div>
-				</>
-			)
-
+			return <div>{cards.map((card, i) => renderCard(card, i))}</div>
 		}
 
 	}
@@ -202,24 +176,18 @@ export default function Edit(props) {
 			})
 		}
 		moveBlock();
-
 	}, [cards])
 
-
 	useEffect(() => {
-
 		const loadCards = () => {
 			setCards([]);
 
 			if (sliderBlocks.length > 0) {
-
 				sliderBlocks.map((slide, index) => {
-
 					const sliderInnerBlocks = slide.innerBlocks;
 					let innerContent = '';
 					innerContent += `<div class="flex ${slide.attributes.contentPosition}" style="background-image: url(${slide.attributes.media.mediaUrl}); background-repeat: no-repeat; background-size: cover; height:100%;">`;
 					sliderInnerBlocks.map(inner => {
-
 						if (inner.name == 'core/buttons') {
 							const align = inner.attributes.layout != undefined ? 'is-content-justification-' + inner.attributes.layout.justifyContent : '';
 							innerContent += '<div class="wp-block-buttons' + ' ' + align + '">';
@@ -248,8 +216,6 @@ export default function Edit(props) {
 
 	props.setAttributes({ slides: cards })
 
-	console.log(wp.data.select('core/block-editor').getBlockAttributes(props.clientId))
-	console.log(props.clientId)
 	const blockProps = useBlockProps({
 		style: {
 			height: props.attributes.height
@@ -294,8 +260,7 @@ export default function Edit(props) {
 					<Button
 						className="gutenberg-slider-add__slide is-primary"
 						onClick={insertButtonBlock}
-						help={'fghj'}>Add New Slide</Button>
-
+						help={'Adds new slide'}>Add New Slide</Button>
 				</PanelBody>
 				<PanelBody>
 					<PanelRow>

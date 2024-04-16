@@ -78,10 +78,8 @@ export default function SlideEdit(props) {
                 }
                 {hasMedia &&
                     <>
-
                         <InspectorControls>
                             <PanelBody>
-
                                 <SelectControl
                                     label="Content Position"
                                     value={props.attributes.contentPosition}
