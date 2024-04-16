@@ -3,7 +3,7 @@ const { addFilter } = wp.hooks;
 const { Fragment } = wp.element;
 
 const { createHigherOrderComponent } = wp.compose;
-const { ToggleControl } = wp.components;
+
 
 import { __ } from '@wordpress/i18n';
 import { useDrag } from 'react-dnd'
@@ -12,10 +12,17 @@ import update from 'immutability-helper'
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 
-import { useState, useCallback, useEffect } from '@wordpress/element';
+import { useState, useCallback, useEffect, useRef } from '@wordpress/element';
 
 import { useBlockProps, InspectorControls, useInnerBlocksProps } from '@wordpress/block-editor';
-import { PanelBody, Button, __experimentalNumberControl as NumberControl, SelectControl, __experimentalUnitControl as UnitControl } from '@wordpress/components';
+import {
+	PanelBody,
+	PanelRow,
+	Button,
+	__experimentalUnitControl as UnitControl,
+	__experimentalNumberControl as NumberControl,
+	ToggleControl
+} from '@wordpress/components';
 import { createBlock } from "@wordpress/blocks";
 import { useDispatch, dispatch, select, useSelect, subscribe } from "@wordpress/data";
 
@@ -25,6 +32,8 @@ import './editor.scss';
 
 import { Card } from './components/Card.js';
 //import { SliderContainer } from './components/SliderContainer.js'
+
+
 
 
 
@@ -54,7 +63,8 @@ const insertEditButton = createHigherOrderComponent((BlockEdit) => {
 		const parentBlocks = wp.data.select('core/block-editor').getBlockParents(props.clientId);
 		const parentAttributes = wp.data.select('core/block-editor').getBlocksByClientId(parentBlocks);
 
-		if (parentAttributes.length > 0 && parentAttributes[0].name === 'gavflab/gutenberg-slider') {
+
+		if (parentAttributes.length > 0 && parentAttributes[0].name === 'gavflab/gutenberg-slider' && props.name === 'pixelhero/slide-block') {
 			return (
 				<Fragment>
 					{isSelected &&
@@ -73,7 +83,8 @@ const insertEditButton = createHigherOrderComponent((BlockEdit) => {
 
 				</Fragment>
 			);
-		} else {
+		}
+		else {
 			return (
 				<BlockEdit {...props} />
 			)
@@ -89,11 +100,36 @@ addFilter(
 );
 
 
+
 export default function Edit(props) {
 
+	const slider = useRef(null);
+
+
+	const navigateSlider = (direction) => {
+		if (direction == 'next') {
+			const scrolledLeft = slider.current.scrollLeft;
+			const sliderWidth = slider.current.offsetWidth;
+			slider.current.scroll(scrolledLeft + sliderWidth, 0)
+		}
+
+		if (direction == 'prev') {
+			const scrolledLeft = slider.current.scrollLeft;
+			const sliderWidth = slider.current.offsetWidth;
+			slider.current.scroll(scrolledLeft - sliderWidth, 0)
+		}
+
+	}
+
 	const [cards, setCards] = useState([]);
-	const [size, setSize] = useState(props.attributes.size);
-	const [height, setHeight] = useState(props.attributes.height);
+	const [autoplay, setAutoplay] = useState(props.attributes.autoplay)
+	const [autoplayDelay, setAutoplayDelay] = useState(props.attributes.autoplayDelay)
+	const [slidesPerView, setSlidesPerView] = useState(props.attributes.slidesPerView)
+	const [navigation, setNavigation] = useState(props.attributes.navigation)
+	const [pagination, setPagination] = useState(props.attributes.pagination)
+	const [speed, setSpeed] = useState(props.attributes.speed)
+	const [_size, setSize] = useState(props.attributes.size);
+	const [_height, setHeight] = useState(props.attributes.height);
 
 	const { clientId } = props;
 
@@ -104,7 +140,7 @@ export default function Edit(props) {
 	function insertButtonBlock() {
 		const innerCount = select("core/block-editor").getBlocksByClientId(clientId)[0]
 			.innerBlocks.length;
-		let block = createBlock("core/cover");
+		let block = createBlock("pixelhero/slide-block");
 		dispatch("core/block-editor").insertBlock(block, innerCount, clientId);
 
 		setTimeout(() => {
@@ -181,9 +217,9 @@ export default function Edit(props) {
 
 					const sliderInnerBlocks = slide.innerBlocks;
 					let innerContent = '';
-
+					innerContent += `<div class="flex ${slide.attributes.contentPosition}" style="background-image: url(${slide.attributes.media.mediaUrl}); background-repeat: no-repeat; background-size: cover; height:100%;">`;
 					sliderInnerBlocks.map(inner => {
-						innerContent += '<div class="editor-styles-wrapper">';
+
 						if (inner.name == 'core/buttons') {
 							const align = inner.attributes.layout != undefined ? 'is-content-justification-' + inner.attributes.layout.justifyContent : '';
 							innerContent += '<div class="wp-block-buttons' + ' ' + align + '">';
@@ -192,15 +228,16 @@ export default function Edit(props) {
 							})
 							innerContent += '</div>';
 						} else {
-
 							innerContent += inner.originalContent;
 						}
-						innerContent += '</div>';
-
 					})
+					innerContent += '</div>';
 
-					const slideContent = slide.originalContent.slice(0, -12) + innerContent + slide.originalContent.slice(-12);
-					setCards(cards => [...cards, { id: index, text: slideContent, clientId: slide.clientId, identifier: slide.innerBlocks[0].originalContent }]);
+					const slideContent = slide.originalContent.split('</div>')[0] + innerContent + slide.originalContent.slice(-6);
+
+					if (slide.innerBlocks.length > 0) {
+						setCards(cards => [...cards, { id: index, text: slideContent, clientId: slide.clientId, identifier: slide.innerBlocks[0].originalContent }]);
+					}
 				})
 
 			};
@@ -211,8 +248,8 @@ export default function Edit(props) {
 
 	props.setAttributes({ slides: cards })
 
-
-
+	console.log(wp.data.select('core/block-editor').getBlockAttributes(props.clientId))
+	console.log(props.clientId)
 	const blockProps = useBlockProps({
 		style: {
 			height: props.attributes.height
@@ -220,17 +257,15 @@ export default function Edit(props) {
 	});
 	const innerBlocksProps = useInnerBlocksProps(
 		{
-			className: "swiper-wrapper"
+			className: `swiper-wrapper slides-1-${props.attributes.slidesPerView}`
 		},
 		{
-			allowedBlocks: ['core/cover']
+			allowedBlocks: ['pixelhero/slide-block']
 		}
 	);
-	console.log(props);
 	return (
 		<>
 			<section className="gutenberg-slider" {...blockProps}>
-
 				{blockCount == 0 &&
 					<div className="slider_empty">
 						<span>Slider is empty</span>
@@ -239,17 +274,20 @@ export default function Edit(props) {
 							onClick={insertButtonBlock}
 							help={'fghj'}>Add New Slide</Button>
 					</div>}
-				<div {...innerBlocksProps} />
-
-
-
+				<div className="wrapper">
+					<div {...innerBlocksProps} ref={slider} />
+					<div className="slider-actions">
+						<button onClick={() => navigateSlider('prev')}>Prev</button>
+						<button onClick={() => navigateSlider('next')}>Next</button>
+					</div>
+				</div>
 			</section>
 			<InspectorControls>
 				<PanelBody>
 					<DndProvider backend={HTML5Backend}>
 						<p>Drag and drop slides to change order.</p>
 						<p>Click 'Edit' to edit the slide</p>
-						<SliderContainer {...props}
+						<SliderContainer cards={cards} {...props}
 
 						/>
 					</DndProvider>
@@ -259,17 +297,68 @@ export default function Edit(props) {
 						help={'fghj'}>Add New Slide</Button>
 
 				</PanelBody>
-				<PanelBody
-					className="height_unit_control">
-
-					<UnitControl
-						label='Min. Slider Height'
-						min='0'
-						onChange={(newHeight) => { props.setAttributes({ height: newHeight }), setHeight(newHeight) }}
-						onUnitChange={(newSize) => { props.setAttributes({ size: newSize }), setSize(newSize) }}
-						value={[props.attributes.height]}
-						help='sdgdsgds'
-					/>
+				<PanelBody>
+					<PanelRow>
+						<UnitControl
+							label='Min. Slider Height'
+							min='0'
+							onChange={(newHeight) => { props.setAttributes({ height: newHeight }), setHeight(newHeight) }}
+							onUnitChange={(newSize) => { props.setAttributes({ size: newSize }), setSize(newSize) }}
+							value={[props.attributes.height]}
+							help='Set Min. height'
+						/>
+					</PanelRow>
+					<PanelRow>
+						<NumberControl
+							label="Slides Per View"
+							isShiftStepEnabled={true}
+							onChange={(value) => { props.setAttributes({ slidesPerView: parseInt(value) }), setSlidesPerView(value), console.log(value) }}
+							shiftStep={10}
+							max={6}
+							value={slidesPerView}
+						/>
+					</PanelRow>
+					<PanelRow>
+						<NumberControl
+							label="Slider Speed"
+							isShiftStepEnabled={true}
+							onChange={(value) => { props.setAttributes({ speed: parseInt(value) }), setSpeed(value) }}
+							shiftStep={10}
+							value={speed}
+						/>
+					</PanelRow>
+					<PanelRow>
+						<ToggleControl
+							label="Toggle Autoplay"
+							checked={autoplay}
+							onChange={(value) => { props.setAttributes({ autoplay: value }), setAutoplay(value) }}>
+						</ToggleControl>
+					</PanelRow>
+					{autoplay &&
+						<PanelRow>
+							<NumberControl
+								label="Autplay Speed in ms"
+								isShiftStepEnabled={true}
+								onChange={(value) => { props.setAttributes({ autoplayDelay: parseInt(value) }), setAutoplayDelay(value) }}
+								shiftStep={10}
+								value={autoplayDelay}
+							/>
+						</PanelRow>
+					}
+					<PanelRow>
+						<ToggleControl
+							label="Toggle Navigation"
+							checked={navigation}
+							onChange={(value) => { props.setAttributes({ navigation: value }), setNavigation(value) }}>
+						</ToggleControl>
+					</PanelRow>
+					<PanelRow>
+						<ToggleControl
+							label="Toggle Pagination"
+							checked={pagination}
+							onChange={(value) => { props.setAttributes({ pagination: value }), setPagination(value) }}>
+						</ToggleControl>
+					</PanelRow>
 				</PanelBody>
 			</InspectorControls>
 		</>

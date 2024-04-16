@@ -20,7 +20,10 @@ const handleEdit = (clientId) => {
 
 
 
-export const Card = ({ id, text, index, moveCard, clientId }) => {
+export const Card = ({ id, text, index, moveCard, clientId, card }) => {
+
+
+
     const ref = useRef(null)
     const [{ handlerId }, drop] = useDrop({
         accept: ItemTypes.CARD,
@@ -89,4 +92,4 @@ export const Card = ({ id, text, index, moveCard, clientId }) => {
             </div>
         </div>
     )
-}
+} 

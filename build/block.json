@@ -12,13 +12,15 @@
     "align": [
       "full",
       "wide"
-    ]
+    ],
+    "interactivity": true
   },
   "textdomain": "gutenberg-slider",
   "editorScript": "file:./index.js",
   "editorStyle": "file:./index.css",
   "style": "file:./style-index.css",
   "render": "file:./render.php",
+  "viewScript": "file:./view.js",
   "attributes": {
     "slides": {
       "type": "array",
@@ -31,6 +33,30 @@
     "height": {
       "type": "string",
       "default": "50vh"
+    },
+    "speed": {
+      "type": "number",
+      "default": 2500
+    },
+    "autoplay": {
+      "type": "boolean",
+      "default": false
+    },
+    "autoplayDelay": {
+      "type": "number",
+      "default": 2500
+    },
+    "slidesPerView": {
+      "type": "number",
+      "default": 1
+    },
+    "navigation": {
+      "type": "boolean",
+      "default": false
+    },
+    "pagination": {
+      "type": "boolean",
+      "default": false
     }
   }
 }

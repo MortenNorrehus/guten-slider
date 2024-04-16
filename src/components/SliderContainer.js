@@ -4,11 +4,7 @@ import { Card } from './Card';
 import update from 'immutability-helper'
 
 
-
-
-
-export const SliderContainer = (props) => {
-
+export const SliderContainer = ({ cards }) => {
 
     {
         /* const [cards, setCards] = useState(props.attributes.slides);
@@ -28,6 +24,7 @@ export const SliderContainer = (props) => {
 
         }, [])
         const renderCard = useCallback((card, index) => {
+
             return (
                 <Card
                     key={card.id}
