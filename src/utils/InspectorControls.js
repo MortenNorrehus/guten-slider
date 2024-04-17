@@ -1,5 +1,5 @@
 import { InspectorControls } from '@wordpress/block-editor';
-import { SliderContainer } from './SliderContainer';
+import { SliderContainer } from '../components/SliderContainer.js'
 import { useState } from '@wordpress/element';
 import { InsertButtonBlock } from './InsertButtonBlock';
 
@@ -26,16 +26,12 @@ export const InspectorControl = ({ cards, setCards, props }) => {
     const [_size, setSize] = useState(props.attributes.size);
     const [_height, setHeight] = useState(props.attributes.height);
 
-
-
     return (<InspectorControls>
         <PanelBody>
             <DndProvider backend={HTML5Backend}>
                 <p>Drag and drop slides to change order.</p>
                 <p>Click 'Edit' to edit the slide</p>
-                <SliderContainer cards={cards} setCards={setCards} {...props}
-
-                />
+                <SliderContainer cards={cards} setCards={setCards} {...props} />
             </DndProvider>
             <Button
                 className="gutenberg-slider-add__slide is-primary"

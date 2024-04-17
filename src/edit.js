@@ -8,9 +8,9 @@ import {
 import { useDispatch, select, useSelect } from "@wordpress/data";
 import './editor.scss';
 
-import { InspectorControl } from './components/InspectorControls.js';
-import { InsertEditButton } from './components/InsertEditButton.js';
-import { InsertButtonBlock } from './components/InsertButtonBlock.js';
+import { InspectorControl } from './utils/InspectorControls.js';
+import { InsertEditButton } from './utils/InsertEditButton.js';
+import { InsertButtonBlock } from './utils/InsertButtonBlock.js';
 import { useAfterSave } from './hooks/useAfterSave.js';
 
 addFilter(
@@ -77,13 +77,16 @@ export default function Edit(props) {
 		setCards([]);
 
 		const loadMedia = (attributes) => {
-			if (attributes.mediaMime.includes('image')) {
-				return `" style="background-image: url(${attributes.mediaUrl}); background-repeat: no-repeat; background-size: cover; height:100%;">`;
-			}
 
-			/* A bit hacky solution to impelement a video placeholder background image */
-			if (attributes.mediaMime.includes('video')) {
-				return `video-placeholder">`;
+			if (attributes) {
+				if (attributes.mediaMime.includes('image')) {
+					return `" style="background-image: url(${attributes.mediaUrl}); background-repeat: no-repeat; background-size: cover; height:100%;">`;
+				}
+
+				/* A bit hacky solution to impelement a video placeholder background image */
+				if (attributes.mediaMime.includes('video')) {
+					return `video-placeholder">`;
+				}
 			}
 		}
 

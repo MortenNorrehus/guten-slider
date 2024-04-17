@@ -241,3 +241,14 @@
 .slides-1-5 .gutenberg_slider_slide {
 	min-width: calc(100%/6)
 }
+
+.swiper-wrapper .components-placeholder  {
+	height: 100% !important;
+	display: flex;
+  	justify-content: center;
+  	align-items: center;
+
+	& .components-placeholder__fieldset {
+		justify-content: center;
+	}
+}

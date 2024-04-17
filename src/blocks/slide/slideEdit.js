@@ -51,17 +51,18 @@ export default function SlideEdit(props) {
                     <MediaPlaceholder
                         icon={<BlockIcon icon="format-gallery" />}
                         labels={{
-                            title: "Cover Slider",
-                            instructions: "Create a cover slider.",
+                            title: "Add new slide",
+                            instructions: "Add a video or image to create a new slide",
                         }}
-                        onSelect={(newMedia) =>
+                        onSelect={(newMedia) => {
                             props.setAttributes({
                                 media: {
                                     mediaMime: newMedia.mime,
                                     mediaId: newMedia.id,
                                     mediaUrl: newMedia.url
                                 }
-                            })}
+                            }, console.log(newMedia))
+                        }}
                     >
                         {/*  INSERT EXTRA CONTENT HERE - EX. VIMEO/YOUTUBE */}
                     </MediaPlaceholder>

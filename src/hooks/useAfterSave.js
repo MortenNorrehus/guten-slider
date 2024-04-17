@@ -1,4 +1,3 @@
-import { useBlockProps } from '@wordpress/block-editor';
 import { useRef, useState, useEffect } from '@wordpress/element';
 import { useSelect } from '@wordpress/data';
 

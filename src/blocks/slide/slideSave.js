@@ -5,8 +5,6 @@ import { InnerBlocks, useInnerBlocksProps, useBlockProps } from "@wordpress/bloc
 const SaveSlide = (props) => {
     const blockProps = useBlockProps.save();
 
-
-
     const mediaUrl = props.attributes.media != null ? {
         backgroundImage: `url(${props.attributes.media.mediaUrl}`,
         backgroundRepeat: 'no-repeat',

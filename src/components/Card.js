@@ -18,11 +18,7 @@ const handleEdit = (clientId) => {
 
 }
 
-
-
-export const Card = ({ id, text, index, moveCard, clientId, card }) => {
-
-
+export const Card = ({ id, text, index, moveCard, clientId }) => {
 
     const ref = useRef(null)
     const [{ handlerId }, drop] = useDrop({
