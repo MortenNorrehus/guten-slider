@@ -15,7 +15,6 @@ if (!function_exists('init_assets')) {
 	add_action('enqueue_block_assets', 'init_assets');
 }
 
-
 /* ATTRIBUTES */
 
 /* Autoplay */

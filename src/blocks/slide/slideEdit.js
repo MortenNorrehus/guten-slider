@@ -1,4 +1,3 @@
-import { insertEditButton } from './components/insertEditButton';
 import {
     useBlockProps,
     useInnerBlocksProps,
@@ -20,17 +19,9 @@ import {
     ColorPicker
 } from "@wordpress/components";
 
-import { addFilter } from '@wordpress/hooks';
 import { useState } from '@wordpress/element';
 
-addFilter(
-    'editor.BlockEdit',
-    'pixelhero/insert-edit-button',
-    insertEditButton
-);
-
 export default function SlideEdit(props) {
-    const [position, setPosition] = useState('middle-center');
     const [color, setColor] = useState(props.attributes.color);
 
     const blockProps = useBlockProps({
@@ -63,15 +54,14 @@ export default function SlideEdit(props) {
                             title: "Cover Slider",
                             instructions: "Create a cover slider.",
                         }}
-                        onSelect={(newMedia) => {
+                        onSelect={(newMedia) =>
                             props.setAttributes({
                                 media: {
                                     mediaMime: newMedia.mime,
                                     mediaId: newMedia.id,
                                     mediaUrl: newMedia.url
                                 }
-                            }, console.log(newMedia))
-                        }}
+                            })}
                     >
                         {/*  INSERT EXTRA CONTENT HERE - EX. VIMEO/YOUTUBE */}
                     </MediaPlaceholder>

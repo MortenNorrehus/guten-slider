@@ -140,6 +140,15 @@
 	border-bottom: 1px solid black;
 }
 
+.video-placeholder {
+	background-image: url('video-placeholder.webp');
+	background-repeat: no-repeat;
+  	background-size: cover;
+  	background-position: center;
+	height: 100%;
+	width: 100%;
+}
+
 .slider_empty span {
 	margin-bottom: 15px;
 }
@@ -206,4 +215,29 @@
 .bottom-right {
 	justify-content: end;
 	align-items: end;
+}
+
+
+.slides-1-1 .gutenberg_slider_slide {
+	min-width: calc(100%/1)
+}
+
+.slides-1-2 .gutenberg_slider_slide {
+	min-width: calc(100%/2)
+}
+
+.slides-1-3 .gutenberg_slider_slide {
+	min-width: calc(100%/3)
+}
+
+.slides-1-4 .gutenberg_slider_slide {
+	min-width: calc(100%/4)
+}
+
+.slides-1-5 .gutenberg_slider_slide {
+	min-width: calc(100%/5)
+}
+
+.slides-1-5 .gutenberg_slider_slide {
+	min-width: calc(100%/6)
 }

@@ -1,16 +1,10 @@
 
-import { useState, useCallback } from '@wordpress/element';
+import { useCallback } from '@wordpress/element';
 import { Card } from './Card';
 import update from 'immutability-helper'
 
-
-export const SliderContainer = ({ cards }) => {
-
+export const SliderContainer = ({ cards, setCards }) => {
     {
-        /* const [cards, setCards] = useState(props.attributes.slides);
- 
-         props.setAttributes({ slides: cards });*/
-
         const moveCard = useCallback((dragIndex, hoverIndex) => {
             setCards((prevCards) =>
                 update(prevCards, {
@@ -20,25 +14,22 @@ export const SliderContainer = ({ cards }) => {
                     ],
                 }),
             )
-
-
         }, [])
         const renderCard = useCallback((card, index) => {
-
             return (
-                <Card
-                    key={card.id}
-                    index={index}
-                    id={card.id}
-                    text={card.text}
-                    moveCard={moveCard}
-                />
+                <>
+                    <Card
+                        key={card.id}
+                        index={index}
+                        id={card.id}
+                        text={card.text}
+                        moveCard={moveCard}
+                        clientId={card.clientId}
+                    />
+                </>
             )
         }, [])
-        return (
-            <>
-                <div>{cards.map((card, i) => renderCard(card, i))}</div>
-            </>
-        )
+        return <div>{cards.map((card, i) => renderCard(card, i))}</div>
     }
+
 }
